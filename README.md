@@ -8,7 +8,7 @@ This repo gives you ready-made agent blueprints (RFI review, submittals, safety,
 
 1. A Datagrid account and API key from [app.datagrid.com](https://app.datagrid.com) (API Keys).
 2. Python 3.10+.
-3. Node.js 20+ (for the Closeout web app).
+3. Node.js 20+ (for the Construction Lessons Learned web app).
 
 ```bash
 python -m venv .venv
@@ -21,7 +21,7 @@ cp .env.example .env
 
 Optional: set `CONSTRUCTION_KNOWLEDGE_IDS` to a comma-separated list of Datagrid knowledge IDs so agents are scoped to your project docs instead of all org knowledge.
 
-## Closeout web app
+## Construction Lessons Learned web app
 
 Monochrome survey UI for:
 
@@ -165,8 +165,8 @@ src/datagrid_agents/
   definitions/           # construction agent blueprints
   orchestrator/          # parallel Datagrid + local-context workflows
 server/
-  app.py                 # Closeout FastAPI (lessons + mentor)
-web/                     # Closeout Vite/React UI
+  app.py                 # Construction Lessons Learned FastAPI
+web/                     # Construction Lessons Learned Vite/React UI
 .cursor/skills/
   datagrid-orchestrator/ # Cursor skill for hybrid orchestration
 .cursor/agents/

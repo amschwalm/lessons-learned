@@ -88,18 +88,21 @@ button {
 
 .brand {
   font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-size: 0.82rem;
   text-transform: uppercase;
+  max-width: min(70vw, 28rem);
+  line-height: 1.2;
 }
 
 .brand span {
+  display: inline-block;
   color: var(--ink-muted);
   font-weight: 500;
   margin-left: 0.55rem;
   letter-spacing: 0.12em;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
 }
 
 .nav-link {
@@ -141,10 +144,10 @@ button {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(3.4rem, 10vw, 7rem);
-  line-height: 0.92;
+  font-size: clamp(2.4rem, 7vw, 5.2rem);
+  line-height: 0.98;
   letter-spacing: -0.03em;
-  max-width: 10ch;
+  max-width: 12ch;
 }
 
 .hero-lead {

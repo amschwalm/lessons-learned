@@ -1,4 +1,4 @@
-"""Closeout web API — Lessons Extractor + Mentor flows over Datagrid."""
+"""Construction Lessons Learned web API — extractor + mentor over Datagrid."""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ if not os.environ.get("DATAGRID_API_KEY") and os.environ.get("Datagrid_API_KEY")
 from datagrid_agents import service  # noqa: E402
 from datagrid_agents.orchestrator.registry import load_role  # noqa: E402
 
-app = FastAPI(title="Closeout", version="0.1.0")
+app = FastAPI(title="Construction Lessons Learned", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
