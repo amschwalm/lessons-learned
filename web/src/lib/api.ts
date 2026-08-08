@@ -193,6 +193,7 @@ export async function streamExtractLessons(
 
   if (!res.ok || !res.body) {
     const data = await res.json().catch(() => ({}))
+    // 404 is handled above via fallback to /api/lessons/extract.
     const detail = data.detail || data.error || `Request failed (${res.status})`
     throw new Error(
       `${typeof detail === 'string' ? detail : JSON.stringify(detail)} [${streamUrl}]`,
