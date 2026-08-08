@@ -55,6 +55,24 @@ List agents already in Datagrid:
 datagrid-agents remote
 ```
 
+## Cursor orchestrator (Datagrid API + local code)
+
+Build agents in Datagrid, then coordinate them from Cursor:
+
+```bash
+datagrid-agents roles
+datagrid-agents workflows
+datagrid-agents orchestrate utility_buyout_risks \
+  -p "Buying out elec utility package — top risks from lessons learned" \
+  -c ./notes/utility-buyout.md
+```
+
+This fans out parallel Datagrid converse calls (mentor + schedule + change_order), attaches local file context, and writes artifacts under `.orchestrator/runs/`.
+
+Cursor skill: `.cursor/skills/datagrid-orchestrator/` (`/datagrid-orchestrator`).
+
+Role IDs live in `src/datagrid_agents/orchestrator/agents.yaml` (override with `DATAGRID_AGENT_<ROLE>`).
+
 ## Included agents
 
 | Slug | Use case |
@@ -101,6 +119,9 @@ src/datagrid_agents/
   registry.py            # load YAML definitions
   service.py             # create / sync / converse
   definitions/           # construction agent blueprints
+  orchestrator/          # parallel Datagrid + local-context workflows
+.cursor/skills/
+  datagrid-orchestrator/ # Cursor skill for hybrid orchestration
 examples/
 tests/
 ```
