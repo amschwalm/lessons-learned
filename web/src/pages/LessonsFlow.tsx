@@ -99,9 +99,10 @@ export function LessonsFlow() {
         if (missing.length) {
           setError(
             `API is running but missing routes: ${missing.join(', ')}. ` +
-              'Kill uvicorn and restart it from cursor/fix-project-verify-ux-30e8.',
+              'In Terminal 1: lsof -ti:8000 | xargs kill -9 ; then from ~/Desktop/lessons-learned on main run ' +
+              'source .venv/bin/activate && python -m uvicorn server.app:app --reload --port 8000',
           )
-          setPassLine('Stale API server — restart uvicorn on the fix branch')
+          setPassLine('Stale API server — kill port 8000 and restart uvicorn from main')
         }
       } catch (err) {
         if (cancelled) return

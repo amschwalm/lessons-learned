@@ -135,8 +135,8 @@ async function request<T>(path: string, body: unknown): Promise<T> {
     if (res.status === 404) {
       throw new Error(
         `API route missing (${detailText}) at ${url}. ` +
-          'Stop the old uvicorn process, pull cursor/fix-project-verify-ux-30e8, then restart: ' +
-          'python -m uvicorn server.app:app --reload --port 8000',
+          'Kill the old server (lsof -ti:8000 | xargs kill -9), git checkout main && git pull, then: ' +
+          'source .venv/bin/activate && python -m uvicorn server.app:app --reload --port 8000',
       )
     }
     throw new Error(`${detailText} [${res.status} ${url}]`)
