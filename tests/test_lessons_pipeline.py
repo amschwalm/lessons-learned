@@ -159,6 +159,8 @@ def test_run_multipass_extraction_via_orchestrator():
         on_event=lambda event, data: events.append((event, data)),
         max_workers=8,
         cache=False,
+        project="Harborview Phase 2",
+        knowledge_name="Harborview",
     )
 
     assert result["pass_count"] == 20
@@ -166,11 +168,18 @@ def test_run_multipass_extraction_via_orchestrator():
     assert len(result["findings"]) == TARGET_FINDINGS
     assert result["orchestrator"]["workflow"] == "lessons_multipass"
     assert result["orchestrator"]["max_workers"] == 8
+    assert result["project"] == "Harborview Phase 2"
     assert any(event == "pass" for event, _ in events)
     assert any(event == "link" for event, _ in events)
     assert any(event == "step" for event, _ in events)
+    # Generative per-lens plan steps should appear before completions.
+    lens_steps = [
+        data for event, data in events
+        if event == "step" and str(data.get("id", "")).startswith("lens-")
+    ]
+    assert len(lens_steps) >= 20
     assert any(
-        event == "step" and "Orchestrator" in (data.get("label") or "")
+        event == "step" and "correlative" in (data.get("label") or "").lower()
         for event, data in events
     )
 
