@@ -28,6 +28,17 @@ export DATAGRID_API_KEY="${DATAGRID_API_KEY:-$Datagrid_API_KEY}"
   -c path/to/local/context
 ```
 
+Named playbooks: `utility_buyout_risks`, `rfi_packet_qa`, `submittal_disposition`.
+
+For **new agents** or custom combos (including calling the same agent multiple times):
+
+```bash
+.venv/bin/datagrid-agents orchestrate fanout \
+  --roles mentor,rfi,schedule \
+  --repeat 1 \
+  -p "<user goal>"
+```
+
 Or use the skill wrapper:
 
 ```bash
@@ -40,16 +51,17 @@ python .cursor/skills/datagrid-orchestrator/scripts/run_workflow.py \
 ## Operating procedure
 
 1. **Clarify the goal** — package/trade, decision needed, and any local files.
-2. **Pick a workflow** — start with `utility_buyout_risks` when relevant; otherwise compose role calls via `roles` + targeted `run`.
-3. **Attach local context** — use `-c` for buyout notes, scope excerpts, schedule snippets, or open questions in the repo.
-4. **Run orchestration** — prefer `datagrid-agents orchestrate <workflow>` for parallel fan-out.
-5. **Synthesize** — read the merged markdown/JSON under `.orchestrator/runs/` (or stdout). Deduplicate risks across agents and highlight conflicts.
-6. **Differential Cursor ops** — after Datagrid returns, do what Datagrid cannot:
+2. **Pick a workflow** — named playbook when it fits; otherwise `fanout --roles ...`.
+3. **Register new agents** — add to `agents.yaml` or set `DATAGRID_AGENT_<ROLE>`; then use `fanout` immediately.
+4. **Attach local context** — use `-c` for notes, packets, schedule snippets, or open questions.
+5. **Run orchestration** — `datagrid-agents orchestrate <workflow>`.
+6. **Synthesize** — read merged markdown/JSON under `.orchestrator/runs/`. Deduplicate findings across agents.
+7. **Differential Cursor ops** — after Datagrid returns:
    - write a checklist or risk register into the repo
    - compare claims against local files
    - run tests/scripts
    - open a PR with artifacts
-7. **Follow up** — reuse `conversation_id` values from the run JSON when continuing with one agent.
+8. **Follow up** — reuse `conversation_id` values from the run JSON when continuing with one agent. Multi-pass same-agent: `fanout --roles mentor --repeat 2`.
 
 ## Guardrails
 

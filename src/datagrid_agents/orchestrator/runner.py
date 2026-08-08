@@ -7,9 +7,15 @@ from pathlib import Path
 from typing import Any, Callable
 
 from datagrid_agents.orchestrator.context import gather_context
+from datagrid_agents.orchestrator.differential import analyze_attachment_coverage
 from datagrid_agents.orchestrator.merge import OrchestratorRun, merge_results
 from datagrid_agents.orchestrator.parallel import AgentCall, AgentResult, run_parallel
-from datagrid_agents.orchestrator.workflows import get_workflow_builder, list_workflow_names
+from datagrid_agents.orchestrator.workflows import (
+    DIFFERENTIAL_WORKFLOWS,
+    get_workflow_builder,
+    list_workflow_names,
+    prepare_workflow,
+)
 
 DEFAULT_RUNS_DIR = Path.cwd() / ".orchestrator" / "runs"
 
@@ -24,6 +30,8 @@ def run_workflow(
     prompt: str,
     *,
     context_paths: list[Path | str] | None = None,
+    roles: list[str] | None = None,
+    repeats: int = 1,
     max_workers: int = 3,
     runs_dir: Path | None = DEFAULT_RUNS_DIR,
     converse: Callable[[AgentCall], Any] | None = None,
@@ -32,7 +40,13 @@ def run_workflow(
     if not prompt or not str(prompt).strip():
         raise ValueError("prompt is required")
 
+    prepare_workflow(name, roles=roles, repeats=repeats)
+
     context = gather_context(context_paths)
+    if name in DIFFERENTIAL_WORKFLOWS:
+        analysis = analyze_attachment_coverage(prompt, context_paths)
+        context = (analysis + "\n" + context).strip()
+
     builder = get_workflow_builder(name)
     calls = builder(prompt, context)
     results: list[AgentResult] = run_parallel(

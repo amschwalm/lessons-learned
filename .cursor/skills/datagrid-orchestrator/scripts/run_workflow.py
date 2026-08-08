@@ -35,6 +35,16 @@ def main(argv: list[str] | None = None) -> int:
         default=[],
         help="Local file or directory to attach (repeatable)",
     )
+    parser.add_argument(
+        "--roles",
+        help="Comma-separated roles for fanout (e.g. mentor,schedule,rfi)",
+    )
+    parser.add_argument(
+        "--repeat",
+        type=int,
+        default=1,
+        help="For fanout: call each role N times (default: 1)",
+    )
     parser.add_argument("--max-workers", type=int, default=3)
     parser.add_argument("--runs-dir", default=".orchestrator/runs")
     parser.add_argument("--no-save", action="store_true")
@@ -54,10 +64,16 @@ def main(argv: list[str] | None = None) -> int:
         print("Provide --prompt or --file.", file=sys.stderr)
         return 2
 
+    roles = None
+    if args.roles:
+        roles = [part.strip() for part in args.roles.split(",") if part.strip()]
+
     run = run_workflow(
         args.workflow,
         prompt,
         context_paths=args.context or None,
+        roles=roles,
+        repeats=args.repeat,
         max_workers=args.max_workers,
         runs_dir=None if args.no_save else Path(args.runs_dir),
     )

@@ -52,3 +52,22 @@ submittal:
   chat_mode: full_agent
   description: >
     Compare submittals against specifications for compliance gaps.
+
+drawing_revision:
+  id: 0d10042a-3040-464f-93ce-369f68060d53
+  name: Drawing Revision Reviewer
+  role: drawing_revision
+  chat_mode: full_agent
+  description: >
+    Review drawing revisions for conflicts, missing bubbles, and coordination gaps.
+
+# Optional alias: point this at a dedicated RFI agent when you build one in Datagrid.
+# Until then, deep_search covers RFI/project-document questions in rfi_packet_qa.
+rfi:
+  id: ab199317-59a4-4213-9c3b-535decfa205a
+  name: Deep Search Agent (RFI alias)
+  role: rfi_review
+  chat_mode: full_agent
+  description: >
+    Alias for RFI packet review. Override with DATAGRID_AGENT_RFI when you
+    create a dedicated RFI agent in Datagrid.

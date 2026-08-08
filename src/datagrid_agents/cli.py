@@ -108,10 +108,19 @@ def cmd_orchestrate(args: argparse.Namespace) -> int:
         print("Provide --prompt or --file.", file=sys.stderr)
         return 2
 
+    roles = None
+    if args.roles:
+        roles = [part.strip() for part in args.roles.split(",") if part.strip()]
+        if not roles:
+            print("error: --roles was empty", file=sys.stderr)
+            return 2
+
     run = run_workflow(
         args.workflow,
         prompt,
         context_paths=args.context or None,
+        roles=roles,
+        repeats=args.repeat,
         max_workers=args.max_workers,
         runs_dir=None if args.no_save else Path(args.runs_dir),
     )
@@ -246,6 +255,16 @@ def build_parser() -> argparse.ArgumentParser:
         action="append",
         default=[],
         help="Local file or directory to attach as code/context (repeatable)",
+    )
+    p_orch.add_argument(
+        "--roles",
+        help="Comma-separated role keys for the fanout workflow (e.g. mentor,schedule,rfi)",
+    )
+    p_orch.add_argument(
+        "--repeat",
+        type=int,
+        default=1,
+        help="For fanout: call each role N times with distinct pass angles (default: 1)",
     )
     p_orch.add_argument(
         "--max-workers",

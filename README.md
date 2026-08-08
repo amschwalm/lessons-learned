@@ -65,9 +65,18 @@ datagrid-agents workflows
 datagrid-agents orchestrate utility_buyout_risks \
   -p "Buying out elec utility package — top risks from lessons learned" \
   -c ./notes/utility-buyout.md
+
+# Other playbooks
+datagrid-agents orchestrate rfi_packet_qa -p "Review RFI-12" -c ./packets/rfi-12
+datagrid-agents orchestrate submittal_disposition -p "Disposition 03 30 00" -c ./submittals/033000
+
+# New/custom agents (register in agents.yaml or DATAGRID_AGENT_<ROLE>)
+datagrid-agents orchestrate fanout --roles mentor,rfi --repeat 1 -p "Pressure-test this buyout"
+# Same agent, multiple passes:
+datagrid-agents orchestrate fanout --roles mentor --repeat 2 -p "Pass 1 underground; pass 2 commercial"
 ```
 
-This fans out parallel Datagrid converse calls (mentor + schedule + change_order), attaches local file context, and writes artifacts under `.orchestrator/runs/`.
+Named playbooks fan out parallel Datagrid converse calls, attach local file context, run lightweight local differential checks where relevant, and write artifacts under `.orchestrator/runs/`.
 
 Cursor skill: `.cursor/skills/datagrid-orchestrator/` (`/datagrid-orchestrator`).
 
