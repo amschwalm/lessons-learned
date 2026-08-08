@@ -3,13 +3,13 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "datagrid-agents"
-version = "0.1.0"
-description = "Construction AI agents built on the Datagrid API"
+name = "lessons-learned"
+version = "0.4.0"
+description = "Lessons Learned web app and Datagrid construction agents"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "datagrid-agents contributors" }]
+authors = [{ name = "lessons-learned contributors" }]
 dependencies = [
   "datagrid_ai>=0.16.0",
   "python-dotenv>=1.0.0",
@@ -20,6 +20,7 @@ dependencies = [
 dev = ["pytest>=8.0"]
 
 [project.scripts]
+lessons-learned = "datagrid_agents.cli:main"
 datagrid-agents = "datagrid_agents.cli:main"
 
 [tool.setuptools.packages.find]
