@@ -50,7 +50,11 @@ export type LessonsExtractResult = {
   result: AgentResult
 }
 
-const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
+// In local Vite dev, call FastAPI directly so SSE/multipass isn't broken by the proxy.
+const API_BASE = (
+  import.meta.env.VITE_API_BASE ||
+  (import.meta.env.DEV ? 'http://127.0.0.1:8000' : '')
+).replace(/\/$/, '')
 
 function apiUrl(path: string): string {
   if (path.startsWith('http://') || path.startsWith('https://')) return path
