@@ -72,7 +72,7 @@ def lessons_max_workers(override: int | None = None) -> int:
     """Higher default concurrency than general orchestrator fan-out (20 passes)."""
     if override is not None:
         return max(1, override)
-    return max(1, _env_int("DATAGRID_ORCH_LESSONS_MAX_WORKERS", 10))
+    return max(1, _env_int("DATAGRID_ORCH_LESSONS_MAX_WORKERS", 20))
 
 
 def lessons_timeout_seconds(override: float | None = None) -> float:

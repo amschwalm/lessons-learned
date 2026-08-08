@@ -52,7 +52,7 @@ When you build a dedicated RFI agent in Datagrid, set `DATAGRID_AGENT_RFI=<id>` 
 
 **Local context:** pass the interview Q&A / closeout notes via `-c`; the opening statement is `-p`.
 
-Used by the web extract pipeline (`server/lessons_pipeline.py`) through `run_parallel` with progressive `on_result` events. Tune concurrency with `DATAGRID_ORCH_LESSONS_MAX_WORKERS` (default 10).
+Used by the web extract pipeline (`server/lessons_pipeline.py`) through `run_parallel` with progressive `on_result` events. Tune concurrency with `DATAGRID_ORCH_LESSONS_MAX_WORKERS` (default 20).
 
 ```bash
 .venv/bin/datagrid-agents orchestrate lessons_multipass \
