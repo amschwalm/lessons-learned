@@ -61,6 +61,14 @@ export type ProjectConfirmResult = {
   reasoning: ReasoningStep[]
 }
 
+export type CreditsUsage = {
+  consumed: number
+  pass_credits?: number
+  aggregate_credits?: number
+  billed_calls?: number
+  pass_calls?: number
+}
+
 export type LessonsExtractResult = {
   ok: boolean
   summary: string
@@ -72,6 +80,7 @@ export type LessonsExtractResult = {
   graph_nodes?: string[]
   project?: string
   knowledge_name?: string
+  credits?: CreditsUsage
   result: AgentResult
 }
 

@@ -333,6 +333,93 @@ button {
   font-size: 0.95rem;
 }
 
+.credits-box {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1rem 1.1rem 1.15rem;
+  margin: 0 0 1.5rem;
+  animation: rise 420ms ease both;
+}
+
+.credits-box-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 0.85rem;
+}
+
+.credits-box-head h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.credits-box-head p {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.credits-total {
+  margin: 0 0 0.9rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+}
+
+.credits-total strong {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.credits-total span {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.credits-meta {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.credits-meta div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.credits-meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.credits-meta dd {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+@media (max-width: 700px) {
+  .credits-meta {
+    grid-template-columns: 1fr;
+  }
+}
+
 .progress-bar {
   height: 1px;
   background: var(--line);

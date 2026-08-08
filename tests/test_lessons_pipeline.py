@@ -147,9 +147,12 @@ def test_run_multipass_extraction_via_orchestrator():
                     ],
                 }
             )
+        # Passes cost 1.5 each; aggregate costs 2.5 — total 20*1.5+2.5=32.5
+        credits = 2.5 if "aggregation analyst" in prompt else 1.5
         return SimpleNamespace(
             content=[SimpleNamespace(text=text)],
             conversation_id="c-test",
+            credits=SimpleNamespace(consumed=credits),
         )
 
     result = run_multipass_extraction(
@@ -169,6 +172,8 @@ def test_run_multipass_extraction_via_orchestrator():
     assert result["orchestrator"]["workflow"] == "lessons_multipass"
     assert result["orchestrator"]["max_workers"] == 8
     assert result["project"] == "Harborview Phase 2"
+    assert result["credits"]["consumed"] == 32.5
+    assert result["credits"]["billed_calls"] == 21
     assert any(event == "pass" for event, _ in events)
     assert any(event == "link" for event, _ in events)
     assert any(event == "step" for event, _ in events)

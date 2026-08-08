@@ -451,18 +451,25 @@ def run_multipass_extraction(
 
     pass_results: list[dict[str, Any] | None] = [None] * len(calls)
     completed = 0
+    pass_credits = 0.0
+    pass_credit_calls = 0
 
     def on_result(index: int, _call: AgentCall, result: AgentResult) -> None:
-        nonlocal completed
+        nonlocal completed, pass_credits, pass_credit_calls
         lens = lenses[index]
         text = result.text if result.ok else f"(pass error: {result.error})"
         parsed = parse_pass_result(text, lens)
+        credits = result.credits_consumed
+        if credits is not None and not result.cached:
+            pass_credits += float(credits)
+            pass_credit_calls += 1
         parsed["agent"] = {
             "agent_id": result.agent_id or role.id,
             "agent_name": role.name,
             "conversation_id": result.conversation_id,
             "cached": result.cached,
             "error": result.error,
+            "credits_consumed": credits,
         }
         pass_results[index] = parsed
         completed += 1
@@ -483,6 +490,7 @@ def run_multipass_extraction(
                 "links": link_nodes,
                 "orchestrator": True,
                 "cached": result.cached,
+                "credits_consumed": credits,
             },
         )
         if len(link_nodes) >= 2:
@@ -572,6 +580,15 @@ def run_multipass_extraction(
         else f"(aggregate error: {aggregate_response.error})"
     )
     aggregate = parse_aggregate_result(aggregate_text, [r for r in pass_results if r])
+    aggregate_credits = (
+        float(aggregate_response.credits_consumed)
+        if aggregate_response.credits_consumed is not None and not aggregate_response.cached
+        else 0.0
+    )
+    total_credits = round(pass_credits + aggregate_credits, 4)
+    credit_calls = pass_credit_calls + (
+        1 if aggregate_response.credits_consumed is not None and not aggregate_response.cached else 0
+    )
 
     emit(
         "step",
@@ -593,6 +610,16 @@ def run_multipass_extraction(
         },
     )
 
+    emit(
+        "step",
+        {
+            "id": "credits",
+            "label": f"Extraction used {total_credits:g} Datagrid credits",
+            "status": "done",
+            "detail": f"{credit_calls} billed API calls · {completed} analysis passes + aggregate",
+        },
+    )
+
     return {
         "summary": aggregate.get("summary") or "",
         "actions": aggregate.get("actions") or [],
@@ -602,6 +629,13 @@ def run_multipass_extraction(
         "aggregated_locally": bool(aggregate.get("aggregated_locally")),
         "project": project,
         "knowledge_name": knowledge_name,
+        "credits": {
+            "consumed": total_credits,
+            "pass_credits": round(pass_credits, 4),
+            "aggregate_credits": round(aggregate_credits, 4),
+            "billed_calls": credit_calls,
+            "pass_calls": len(calls),
+        },
         "orchestrator": {
             "workflow": "lessons_multipass",
             "max_workers": workers,

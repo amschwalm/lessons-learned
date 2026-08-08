@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ConnectivityGraph } from '../components/ConnectivityGraph'
+import { CreditsBox } from '../components/CreditsBox'
 import { ElapsedClock } from '../components/ElapsedClock'
 import { FindingsTable } from '../components/FindingsTable'
 import { ReasoningSteps } from '../components/ReasoningSteps'
@@ -10,6 +11,7 @@ import {
   generateFollowups,
   streamExtractLessons,
   type AgentResult,
+  type CreditsUsage,
   type Finding,
   type LinkEvent,
   type ProjectConfirmResult,
@@ -43,6 +45,7 @@ export function LessonsFlow() {
   const [summary, setSummary] = useState('')
   const [actions, setActions] = useState<string[]>([])
   const [findings, setFindings] = useState<Finding[]>([])
+  const [credits, setCredits] = useState<CreditsUsage | null>(null)
   const [reasoning, setReasoning] = useState<ReasoningStep[]>([])
   const [activeLinks, setActiveLinks] = useState<LinkEvent[]>([])
   const [pulseNodes, setPulseNodes] = useState<string[]>([])
@@ -224,6 +227,7 @@ export function LessonsFlow() {
     setActiveLinks([])
     setPulseNodes([])
     setCompletedPasses(0)
+    setCredits(null)
     setPassLine('Launching correlative orchestrator fan-out…')
     setChat([])
     setEndedAt(null)
@@ -270,8 +274,13 @@ export function LessonsFlow() {
       setSummary(data.summary || data.result.text || '')
       setActions(data.actions || [])
       setFindings(data.findings || [])
+      setCredits(data.credits || null)
       setEndedAt(Date.now())
-      setPassLine(`Finished with ${data.findings?.length || 0} ranked findings`)
+      setPassLine(
+        data.credits
+          ? `Finished with ${data.findings?.length || 0} findings · ${data.credits.consumed} credits`
+          : `Finished with ${data.findings?.length || 0} ranked findings`,
+      )
       setStep('result')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Extraction failed')
@@ -340,6 +349,7 @@ export function LessonsFlow() {
     setSummary('')
     setActions([])
     setFindings([])
+    setCredits(null)
     setReasoning([])
     setActiveLinks([])
     setPulseNodes([])
@@ -597,6 +607,7 @@ export function LessonsFlow() {
                     </ol>
                   </div>
                 )}
+                <CreditsBox credits={credits} />
                 <FindingsTable findings={findings} />
                 <div className="chat-box">
                   <h3 className="chat-title">Ask a follow-up</h3>
