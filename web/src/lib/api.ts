@@ -236,7 +236,7 @@ export async function streamExtractLessons(
     })
   } catch (err) {
     throw new Error(
-      `Could not reach API at ${streamUrl}. Is uvicorn running on port 8000? (${
+      `Could not reach the app server at ${streamUrl}. Is it running on port 8000? (${
         err instanceof Error ? err.message : 'network error'
       })`,
     )
