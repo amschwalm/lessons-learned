@@ -345,8 +345,17 @@ export function LessonsFlow() {
           },
         },
       )
-      setResult(data.result)
-      setSummary(data.summary || data.result.text || '')
+      const agentResult =
+        data.result ||
+        ({
+          role: 'lessons_extractor',
+          agent_id: '',
+          agent_name: 'Lessons Learned',
+          text: data.summary || '',
+          conversation_id: null,
+        } satisfies AgentResult)
+      setResult(agentResult)
+      setSummary(data.summary || agentResult.text || '')
       setActions(data.actions || [])
       setFindings(data.findings || [])
       setCredits(data.credits || null)
@@ -358,9 +367,18 @@ export function LessonsFlow() {
       )
       setStep('result')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not finish the review')
+      const detail = err instanceof Error ? err.message : 'Could not finish the review'
+      setError(detail)
       setEndedAt(Date.now())
-      setStep('questions')
+      upsertStep({
+        id: 'extract-launch',
+        label: 'Review did not finish',
+        status: 'error',
+        detail,
+      })
+      setPassLine('Review did not finish — you can try again')
+      // Stay on the reviewing screen so progress/error stay visible.
+      setStep('analyzing')
     } finally {
       setLoading(false)
     }
@@ -767,13 +785,29 @@ export function LessonsFlow() {
                   />
                 </div>
                 <p className="status-line">
-                  {loading ? 'Still working — leave this tab open…' : ''}
+                  {loading ? 'Still working — leave this tab open…' : passLine}
                 </p>
-                {error && <p className="error">{error}</p>}
+                {error ? <p className="error">{error}</p> : null}
+                {!loading && error ? (
+                  <div className="actions">
+                    <button
+                      className="btn"
+                      onClick={() => {
+                        setError('')
+                        setStep('questions')
+                      }}
+                    >
+                      Back to questions
+                    </button>
+                    <button className="btn btn-primary" onClick={runExtract}>
+                      Try again
+                    </button>
+                  </div>
+                ) : null}
               </>
             )}
 
-            {step === 'result' && result && (
+            {step === 'result' && (result || findings.length > 0 || summary) && (
               <>
                 <h2>Lessons found</h2>
                 <p className="sub">
