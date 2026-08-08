@@ -1,8 +1,10 @@
-# datagrid-agents
+# lessons-learned
 
-Construction-focused AI agents built on the [Datagrid API](https://developers.datagrid.com).
+**Lessons Learned** — a Datagrid-powered web app that interviews you about a project moment, runs a multi-pass extraction, and returns a ranked findings table.
 
-This repo gives you ready-made agent blueprints (RFI review, submittals, safety, schedule risk, daily reports, change orders), a small Python CLI to create/sync them in your Datagrid workspace, and examples for running prompts through Converse.
+Repo: [github.com/amschwalm/lessons-learned](https://github.com/amschwalm/lessons-learned)
+
+This repository also includes optional Datagrid construction-agent blueprints and a CLI/orchestrator for Cursor workflows (RFI review, submittals, schedule risk, and more).
 
 ## Prerequisites
 
@@ -157,7 +159,7 @@ python examples/generate_agent_from_prompt.py "An agent that reviews punch lists
 
 ```text
 src/datagrid_agents/
-  cli.py                 # datagrid-agents command
+  cli.py                 # lessons-learned / datagrid-agents CLI
   client.py              # Datagrid SDK helper
   registry.py            # load YAML definitions
   service.py             # create / sync / converse
